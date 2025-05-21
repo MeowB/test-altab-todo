@@ -78,14 +78,11 @@ function App() {
 		setTasks(newTasks)
 	}
 
-	const handleDelete = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-		const li = (e.currentTarget as HTMLElement).closest('li');
-		if (!li || !tasks) return;
-		const id = Number(li.getAttribute('key')) || Number(li.dataset.key) || Number(li.getAttribute('data-key'));
-		if (!id) return;
+	const handleDelete = (id: number) => {
+		if (!tasks) return;
 		const newTasks = tasks.filter(task => task.id !== id);
 		setTasks(newTasks);
-	}
+	};
 
 	return (
 		<>
@@ -150,7 +147,7 @@ function App() {
 									</p>
 								) : ''
 							}
-							<a className="cross" onClick={(e) => handleDelete(e)}>X</a>
+							<a className="cross" onClick={() => handleDelete(task.id)}>X</a>
 						</li>
 					))}
 				</ul>
