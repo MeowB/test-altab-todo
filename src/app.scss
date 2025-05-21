@@ -1,3 +1,26 @@
+// create task animation
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(30px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+// delete task animation
+@keyframes fadeOut {
+	to {
+		opacity: 0;
+		transform: translateX(30px);
+	}
+}
+
+
+
 .dashed {
 	text-decoration: line-through;
 }
@@ -28,6 +51,7 @@
 			border-radius: 8px;
 			resize: none;
 		}
+
 		button {
 			margin-top: 12px;
 			padding: 12px;
@@ -39,6 +63,10 @@
 			margin-right: 8px;
 			letter-spacing: 1px;
 			cursor: pointer;
+
+			&:hover {
+				background-color: #777;
+			}
 		}
 
 		.task-form-actions {
@@ -46,21 +74,25 @@
 			width: 100%;
 			justify-content: space-between;
 			align-items: center;
-			
+
 
 			.cancel-button {
 				background-color: transparent;
 				color: black;
+				border: 2px solid transparent;
+				padding: 11px;
+
+				&:hover {
+					border: 2px solid #ddd;
+				}
 			}
 
 			input[type=date] {
 				border: none;
-				appearance: none;
-				-webkit-appearance: none;
-				-moz-appearance: none;
 				background: none;
+				cursor: pointer;
 			}
-			
+
 
 		}
 	}
@@ -69,6 +101,9 @@
 		margin-top: 24px;
 		width: 65%;
 
+		.remove {
+			animation: fadeOut 0.4s ease-out forwards;
+		}
 		li {
 			width: 100%;
 			border: 2px solid #ddd;
@@ -78,6 +113,8 @@
 			transition: background-color 1s;
 			list-style: none;
 			position: relative;
+			animation: fadeIn 0.4s ease-out;
+
 
 			&:hover {
 				background-color: #eee;
@@ -125,6 +162,10 @@
 			padding: 12px;
 			color: #888;
 			cursor: pointer;
+
+			&:hover {
+				color: #000;
+			}
 		}
 	}
 }
