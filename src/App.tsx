@@ -14,7 +14,7 @@ type Task = {
 	id: number
 	title: string
 	completed: boolean
-	date?: Date | null // Make date optional and allow null
+	date?: Date | null
 }
 
 function App() {
@@ -28,7 +28,7 @@ function App() {
 		const textarea = form.elements.namedItem('taskTitle') as HTMLTextAreaElement;
 		const title = textarea.value.trim();
 		const dateInput = form.elements.namedItem('taskDate') as HTMLInputElement;
-		const date = dateInput && dateInput.value ? new Date(dateInput.value) : null; // Default to null if no date is provided
+		const date = dateInput && dateInput.value ? new Date(dateInput.value) : null;
 
 		if (title) {
 			const newTask: Task = {
@@ -179,7 +179,6 @@ function App() {
 												ref={provided.innerRef}
 												{...provided.draggableProps}
 												{...provided.dragHandleProps}
-												style={{ opacity: 1, transform: 'translateY(0)' }}
 
 											>
 												<div className="title">
