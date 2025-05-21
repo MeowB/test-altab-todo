@@ -1,7 +1,14 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './styles/reset.scss'
 import './app.scss'
 import { FaTrash, FaArrowUp, FaArrowDown, FaCalendar } from 'react-icons/fa'
+import {
+	DragDropContext,
+	Droppable,
+	Draggable,
+} from "@hello-pangea/dnd";
+import type { DropResult } from '@hello-pangea/dnd';
+
 
 type Task = {
 	id: number
@@ -11,7 +18,7 @@ type Task = {
 }
 
 function App() {
-	const [tasks, setTasks] = useState<Task[] | null>(null)
+	const [tasks, setTasks] = useState<Task[]>([])
 	const [newTaskOpen, setNewTaskOpen] = useState<boolean>(false)
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -84,6 +91,17 @@ function App() {
 		setTasks(newTasks);
 	};
 
+
+	const handleOnDragEnd = (result: DropResult) => {
+		if (!result.destination) return;
+
+		const items = Array.from(tasks);
+		const [reorderedItem] = items.splice(result.source.index, 1);
+		items.splice(result.destination.index, 0, reorderedItem);
+
+		setTasks(items);
+	};
+
 	return (
 		<>
 			<main className='todo-list'>
@@ -129,28 +147,45 @@ function App() {
 						)
 					}
 				</div>
-				<ul className='tasks'>
-					{tasks?.map(task => (
-						<li className={`task`} key={task.id}>
-							<div className="title">
-								<input
-									type="checkbox"
-									checked={task.completed}
-									onChange={() => handleCheckboxChange(task.id)}
-								/>
-								<h2 className={`${task.completed ? 'dashed' : ''}`}>{task.title}</h2>
-							</div>
-							{task.date
-								? (
-									<p className="date">
-										<FaCalendar /> {task.date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
-									</p>
-								) : ''
-							}
-							<a className="cross" onClick={() => handleDelete(task.id)}>X</a>
-						</li>
-					))}
-				</ul>
+				<DragDropContext onDragEnd={handleOnDragEnd}>
+					<Droppable droppableId='todos'>
+						{(provided) => (
+							<ul {...provided.droppableProps} ref={provided.innerRef} className='tasks'>
+								{tasks?.map((task, index) => (
+									<Draggable key={task.id} draggableId={(task.id).toString()} index={index}>
+										{(provided) => (
+											<li
+												className={`task`}
+												ref={provided.innerRef}
+												{...provided.draggableProps}
+												{...provided.dragHandleProps}
+											>
+												<div className="title">
+													<input
+														type="checkbox"
+														checked={task.completed}
+														onChange={() => handleCheckboxChange(task.id)}
+													/>
+													<h2 className={`${task.completed ? 'dashed' : ''}`}>{task.title}</h2>
+												</div>
+												{task.date
+													? (
+														<p className="date">
+															<FaCalendar /> {task.date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+														</p>
+													) : ''
+												}
+												<a className="cross" onClick={() => handleDelete(task.id)}>X</a>
+											</li>
+										)}
+									</Draggable>
+								))}
+								{provided.placeholder}
+							</ul>
+
+						)}
+					</Droppable>
+				</DragDropContext>
 				<div className="controls">
 					<button onClick={handleClearComplete}><FaTrash /> Clear complete</button>
 					<button onClick={handleSortChecked}><FaArrowDown /> Complete first</button>
