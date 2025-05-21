@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import './styles/reset.scss'
 import './app.scss'
 import { FaTrash, FaArrowUp, FaArrowDown, FaCalendar } from 'react-icons/fa'
